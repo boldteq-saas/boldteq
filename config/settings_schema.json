@@ -67,19 +67,19 @@
           {
             "type": "color",
             "id": "button_label",
-            "label": "t:settings_schema.colors.settings.button_label.label",
+            "label": "Button Label Color",
             "default": "#FFFFFF"
           },
           {
             "type": "color",
             "id": "secondary_button_label",
-            "label": "t:settings_schema.colors.settings.secondary_button_label.label",
+            "label": "Secondary Button Label Color",
             "default": "#121212"
           },
           {
             "type": "color",
             "id": "shadow",
-            "label": "t:settings_schema.colors.settings.shadow.label",
+            "label": "Shadow Color",
             "default": "#121212"
           },
           {
