@@ -1,0 +1,451 @@
+{% comment %}
+  Homepage Features Section
+  - Displays features in a responsive grid layout
+  - Fully customizable text and icons
+  - Support for mobile, tablet, and desktop views
+{% endcomment %}
+
+{{ 'component-rte.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+.homepage-features {
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+  background-color: {{ section.settings.background_color }};
+}
+
+.homepage-features__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.homepage-features__header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.homepage-features__title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: {{ section.settings.title_color }};
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2rem);
+  line-height: 1.2;
+  text-transform: {{ section.settings.title_text_transform }};
+  letter-spacing: {{ section.settings.title_letter_spacing }}px;
+}
+
+.homepage-features__intro {
+  color: {{ section.settings.text_color }};
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.homepage-features__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media screen and (min-width: 550px) {
+  .homepage-features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .homepage-features__grid {
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+  }
+}
+
+.homepage-features__item {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: {{ section.settings.card_border_radius }}px;
+  background-color: {{ section.settings.card_background_color }};
+  border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+{% if section.settings.enable_card_hover %}
+.homepage-features__item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+{% endif %}
+
+.homepage-features__icon-wrapper {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.homepage-features__icon {
+  width: {{ section.settings.icon_size }}px;
+  height: {{ section.settings.icon_size }}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: {{ section.settings.icon_background_color }};
+  border-radius: {{ section.settings.icon_border_radius }}px;
+  padding: 1rem;
+}
+
+.homepage-features__icon img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.homepage-features__item-title {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: {{ section.settings.item_title_color }};
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-transform: {{ section.settings.item_title_text_transform }};
+  letter-spacing: {{ section.settings.item_title_letter_spacing }}px;
+}
+
+.homepage-features__item-text {
+  color: {{ section.settings.item_text_color }};
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+{%- endstyle -%}
+
+<div class="homepage-features color-{{ section.settings.color_scheme }}">
+  <div class="homepage-features__inner">
+    {% if section.settings.title != blank or section.settings.intro_text != blank %}
+      <div class="homepage-features__header">
+        {% if section.settings.title != blank %}
+          <h2 class="homepage-features__title">{{ section.settings.title }}</h2>
+        {% endif %}
+        
+        {% if section.settings.intro_text != blank %}
+          <div class="homepage-features__intro rte">{{ section.settings.intro_text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="homepage-features__grid">
+      {% for block in section.blocks %}
+        <div class="homepage-features__item" {{ block.shopify_attributes }}>
+          {% if block.settings.icon != blank %}
+            <div class="homepage-features__icon-wrapper">
+              <div class="homepage-features__icon">
+                <img src="{{ block.settings.icon | img_url: 'master' }}" alt="{{ block.settings.title }}" loading="lazy">
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if block.settings.title != blank %}
+            <h3 class="homepage-features__item-title">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.text != blank %}
+            <div class="homepage-features__item-text rte">{{ block.settings.text }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Homepage Features",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "5 WAYS WE STAND OUT"
+    },
+    {
+      "type": "select",
+      "id": "title_text_transform",
+      "label": "Title text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Title letter spacing",
+      "default": 1
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "<p>From thoughtful design to meaningful play, we bring more than just fun to the table. Here are five ways we go beyond the ordinary to create products that inspire, educate, and delight every single day.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature Cards"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "Number of columns (desktop)"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_hover",
+      "label": "Enable card hover effect",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "item_title_color",
+      "label": "Item title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "select",
+      "id": "item_title_text_transform",
+      "label": "Item title text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "item_title_letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Item title letter spacing",
+      "default": 0.5
+    },
+    {
+      "type": "color",
+      "id": "item_text_color",
+      "label": "Item text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon border radius",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share information about product features, benefits, or services to entice your customers.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "IMAGINATION FIRST",
+            "text": "<p>Our products are intentionally designed to spark creativity and open-ended play—encouraging storytelling, exploration, and problem-solving in every session.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "QUALITY & SAFETY",
+            "text": "<p>All products are approved, non-toxic, and undergo rigorous checks—offering peace of mind with every purchase.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "BUILT WITH PURPOSE",
+            "text": "<p>We believe in accessible excellence. Our products deliver premium value without premium prices—making meaningful moments an everyday reality.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
