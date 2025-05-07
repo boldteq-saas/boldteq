@@ -86,8 +86,7 @@
             "type": "color",
             "id": "header_background",
             "label": "Header Background Color",
-            "default": "#ff0000",
-            "info": "Change the header background color"
+            "default": "#ff0000"
           }
         ],
         "role": {
@@ -95,9 +94,6 @@
           "background": {
             "solid": "background",
             "gradient": "background_gradient"
-          },
-          "header_background": {
-            "solid": "header_background"
           },
           "links": "secondary_button_label",
           "icons": "text",
