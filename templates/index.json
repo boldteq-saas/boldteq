@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "image_banner": {
@@ -29,33 +38,32 @@
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
         "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
         "desktop_content_alignment": "center",
+        "show_text_box": false,
         "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
         "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
         "show_text_below": false
       }
     },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
+        "collection": "all",
+        "products_to_show": 8,
         "title": "Featured products",
         "heading_size": "h2",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
         "columns_desktop": 4,
-        "color_scheme": "scheme-1",
+        "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
+        "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": true,
@@ -63,13 +71,67 @@
         "show_rating": false,
         "quick_add": "none",
         "columns_mobile": "2",
+        "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36
+      }
+    },
+    "tak_tak_features_LYUP4y": {
+      "type": "tak-tak-features",
+      "blocks": {
+        "feature_Mw8LeK": {
+          "type": "feature",
+          "settings": {
+            "title": "IMAGINATION FIRST",
+            "text": "Our toys are intentionally designed to spark creativity and open-ended play—encouraging storytelling, exploration, and problem-solving in every session."
+          }
+        },
+        "feature_i3fCVA": {
+          "type": "feature",
+          "settings": {
+            "title": "SCREEN-LIGHT PLAY PHILOSOPHY",
+            "text": "In a world dominated by digital distractions, we're passionate about bringing children back to hands-on, imaginative experiences that build real-world connections."
+          }
+        },
+        "feature_MjeyUW": {
+          "type": "feature",
+          "settings": {
+            "title": "KOALA COMPANION FOR GUIDED PLAY",
+            "text": "Unique to our brand, our friendly Koala mascot leads kids through themed adventures, fostering engagement and emotional bonding."
+          }
+        },
+        "feature_YJrW8Q": {
+          "type": "feature",
+          "settings": {
+            "title": "UNCOMPROMISING QUALITY & SAFETY",
+            "text": "All toys are BIS-approved, non-toxic, and undergo rigorous checks—offering parents peace of mind with every purchase."
+          }
+        },
+        "feature_4Qgjwx": {
+          "type": "feature",
+          "settings": {
+            "title": "BUILT WITH PURPOSE, PRICED WITH CARE",
+            "text": "We believe in accessible excellence. Our toys deliver premium value without premium prices—making meaningful playtime an everyday reality for families."
+          }
+        }
+      },
+      "block_order": [
+        "feature_Mw8LeK",
+        "feature_i3fCVA",
+        "feature_MjeyUW",
+        "feature_YJrW8Q",
+        "feature_4Qgjwx"
+      ],
+      "name": "Tak Tak Features",
+      "settings": {
+        "title": "5 WAYS TAK TAK TOYS STANDS OUT",
+        "intro_text": "From thoughtful design to meaningful play, Tak Tak Toys brings more than just fun to the table. Here are five ways we go beyond the ordinary to create toys that inspire, educate, and delight every single day."
       }
     }
   },
   "order": [
     "image_banner",
-    "featured_collection"
+    "featured_collection",
+    "tak_tak_features_LYUP4y"
   ]
 }
