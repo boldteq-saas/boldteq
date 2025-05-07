@@ -1,0 +1,404 @@
+{% comment %} Advanced Announcement Bar Section {% endcomment %}
+<div class="advanced-announcement-bar" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-speed="{{ section.settings.autoplay_speed }}">
+  <div class="advanced-announcement-bar__container">
+    <div class="advanced-announcement-bar__slider">
+      {% for block in section.blocks %}
+        <div class="advanced-announcement-bar__slide" {{ block.shopify_attributes }}>
+          <div class="advanced-announcement-bar__content">
+            {% if block.settings.icon != blank %}
+              <div class="advanced-announcement-bar__icon">
+                <img src="{{ block.settings.icon | img_url: '32x' }}" alt="{{ block.settings.text }}">
+              </div>
+            {% endif %}
+            
+            <div class="advanced-announcement-bar__text">
+              <span>{{ block.settings.text }}</span>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="advanced-announcement-bar__link">
+                  {{ block.settings.link_text }}
+                  <svg class="advanced-announcement-bar__link-icon" viewBox="0 0 16 16" width="16" height="16">
+                    <path d="M12.5 3.5l-10 10h5.5v5.5l3.5-3.5-3.5-3.5v-5.5h5.5z" fill="currentColor"></path>
+                  </svg>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size > 1 %}
+      <div class="advanced-announcement-bar__controls">
+        <button class="advanced-announcement-bar__prev" aria-label="Previous announcement">
+          <svg viewBox="0 0 16 16" width="16" height="16">
+            <path d="M11 14l-5-5 5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5z" fill="currentColor"></path>
+          </svg>
+        </button>
+        <button class="advanced-announcement-bar__next" aria-label="Next announcement">
+          <svg viewBox="0 0 16 16" width="16" height="16">
+            <path d="M5 14l5-5-5-5 1-1 5 5 5-5 1 1-5 5 5 5-1 1-5-5-5-5z" fill="currentColor"></path>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="advanced-announcement-bar__fallback">
+    <div class="advanced-announcement-bar__content">
+      <span>{{ section.blocks.first.settings.text }}</span>
+      {% if section.blocks.first.settings.link != blank %}
+        <a href="{{ section.blocks.first.settings.link }}" class="advanced-announcement-bar__link">
+          {{ section.blocks.first.settings.link_text }}
+          <svg class="advanced-announcement-bar__link-icon" viewBox="0 0 16 16" width="16" height="16">
+            <path d="M12.5 3.5l-10 10h5.5v5.5l3.5-3.5-3.5-3.5v-5.5h5.5z" fill="currentColor"></path>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .advanced-announcement-bar {
+    position: relative;
+    background-color: {{ section.settings.background_color | color: '#f8f9fa' }};
+    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    z-index: 1000;
+  }
+
+  .advanced-announcement-bar__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .advanced-announcement-bar__slider {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .advanced-announcement-bar__slide {
+    min-width: 100%;
+    flex: 0 0 auto;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+  }
+
+  .advanced-announcement-bar__slide.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .advanced-announcement-bar__content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 100%;
+  }
+
+  .advanced-announcement-bar__icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ section.settings.icon_background_color | color: '#ffffff' }};
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .advanced-announcement-bar__icon img {
+    max-width: 24px;
+    max-height: 24px;
+  }
+
+  .advanced-announcement-bar__text {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+  }
+
+  .advanced-announcement-bar__text span {
+    color: {{ section.settings.text_color | color: '#212529' }};
+    font-weight: 500;
+  }
+
+  .advanced-announcement-bar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: {{ section.settings.link_color | color: '#007bff' }};
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .advanced-announcement-bar__link:hover {
+    color: {{ section.settings.link_hover_color | color: '#0056b3' }};
+  }
+
+  .advanced-announcement-bar__link-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .advanced-announcement-bar__controls {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 1;
+  }
+
+  .advanced-announcement-bar__controls button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: {{ section.settings.control_color | color: '#6c757d' }};
+    transition: color 0.2s ease;
+  }
+
+  .advanced-announcement-bar__controls button:hover {
+    color: {{ section.settings.control_hover_color | color: '#212529' }};
+  }
+
+  .advanced-announcement-bar__controls svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .advanced-announcement-bar__fallback {
+    display: none;
+  }
+
+  @media screen and (max-width: 767px) {
+    .advanced-announcement-bar {
+      padding: 0.75rem;
+    }
+
+    .advanced-announcement-bar__content {
+      gap: 0.75rem;
+    }
+
+    .advanced-announcement-bar__icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .advanced-announcement-bar__icon img {
+      max-width: 20px;
+      max-height: 20px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .advanced-announcement-bar {
+      font-size: 0.8125rem;
+    }
+
+    .advanced-announcement-bar__controls {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const announcementBar = document.querySelector('.advanced-announcement-bar');
+    const slider = announcementBar.querySelector('.advanced-announcement-bar__slider');
+    const slides = slider.querySelectorAll('.advanced-announcement-bar__slide');
+    const prevButton = announcementBar.querySelector('.advanced-announcement-bar__prev');
+    const nextButton = announcementBar.querySelector('.advanced-announcement-bar__next');
+    const autoplay = announcementBar.dataset.autoplay === 'true';
+    const autoplaySpeed = parseInt(announcementBar.dataset.autoplaySpeed) || 5000;
+    let currentSlide = 0;
+    let autoplayInterval;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) {
+          slide.classList.add('active');
+        }
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    function startAutoplay() {
+      if (autoplay && slides.length > 1) {
+        autoplayInterval = setInterval(nextSlide, autoplaySpeed);
+      }
+    }
+
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+      }
+    }
+
+    // Initialize
+    showSlide(currentSlide);
+    startAutoplay();
+
+    // Event listeners
+    prevButton?.addEventListener('click', function() {
+      stopAutoplay();
+      prevSlide();
+      startAutoplay();
+    });
+
+    nextButton?.addEventListener('click', function() {
+      stopAutoplay();
+      nextSlide();
+      startAutoplay();
+    });
+
+    // Pause on hover
+    slider.addEventListener('mouseenter', stopAutoplay);
+    slider.addEventListener('mouseleave', startAutoplay);
+
+    // Fallback for no JavaScript
+    if (!('querySelector' in document)) {
+      const fallback = announcementBar.querySelector('.advanced-announcement-bar__fallback');
+      fallback.style.display = 'block';
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Advanced Announcement Bar",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#212529"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link Hover Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "control_color",
+      "label": "Control Color",
+      "default": "#6c757d"
+    },
+    {
+      "type": "color",
+      "id": "control_hover_color",
+      "label": "Control Hover Color",
+      "default": "#212529"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1000,
+      "max": 9000,
+      "step": 1000,
+      "unit": "ms",
+      "label": "Autoplay Speed",
+      "default": 5000
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Announcement text goes here"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text",
+          "default": "Learn More"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Advanced Announcement Bar",
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "Free shipping on orders over $50",
+            "link": "#",
+            "link_text": "Shop now"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "50% off selected items",
+            "link": "#",
+            "link_text": "View sale"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
