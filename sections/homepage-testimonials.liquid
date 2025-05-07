@@ -1,0 +1,735 @@
+{% comment %}
+  Homepage Testimonials Section
+  - Displays customer testimonials in a responsive slider
+  - Customizable with profile images, ratings, and review text
+  - Supports mobile, tablet, and desktop views
+{% endcomment %}
+
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-rte.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'slider.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+.homepage-testimonials {
+  background-color: {{ section.settings.background_color }};
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+  position: relative;
+}
+
+.homepage-testimonials__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.homepage-testimonials__header {
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.homepage-testimonials__title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: {{ section.settings.title_color }};
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2rem);
+  line-height: 1.2;
+}
+
+.homepage-testimonials__subtitle {
+  color: {{ section.settings.subtitle_color }};
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.homepage-testimonials__slider-wrapper {
+  position: relative;
+  padding: 0 1rem;
+}
+
+.homepage-testimonials__slider {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: 0 -1rem;
+  padding: 1rem;
+}
+
+.homepage-testimonials__slider::-webkit-scrollbar {
+  display: none;
+}
+
+.homepage-testimonials__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+@media screen and (min-width: 750px) {
+  .homepage-testimonials__slide {
+    flex: 0 0 calc(100% / {{ section.settings.slides_per_view_tablet }});
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .homepage-testimonials__slide {
+    flex: 0 0 calc(100% / {{ section.settings.slides_per_view_desktop }});
+  }
+}
+
+.homepage-testimonials__card {
+  background-color: {{ section.settings.card_background_color }};
+  border-radius: {{ section.settings.card_border_radius }}px;
+  padding: 2rem;
+  border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: {% if section.settings.enable_card_shadow %}0 8px 24px rgba(0, 0, 0, 0.08){% else %}none{% endif %};
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+{% if section.settings.enable_card_hover %}
+.homepage-testimonials__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+{% endif %}
+
+.homepage-testimonials__card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.homepage-testimonials__quote {
+  font-size: 2rem;
+  color: {{ section.settings.quote_color }};
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.homepage-testimonials__review {
+  color: {{ section.settings.text_color }};
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.homepage-testimonials__rating {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.homepage-testimonials__star {
+  width: 20px;
+  height: 20px;
+  fill: {{ section.settings.star_color }};
+}
+
+.homepage-testimonials__footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid {{ section.settings.divider_color }};
+  padding-top: 1rem;
+  margin-top: auto;
+}
+
+.homepage-testimonials__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.homepage-testimonials__customer-info {
+  flex-grow: 1;
+}
+
+.homepage-testimonials__customer-name {
+  margin: 0;
+  color: {{ section.settings.customer_name_color }};
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.homepage-testimonials__customer-title {
+  color: {{ section.settings.customer_title_color }};
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.homepage-testimonials__navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.homepage-testimonials__pagination {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.homepage-testimonials__pagination-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: {{ section.settings.pagination_color }};
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.homepage-testimonials__pagination-dot.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.homepage-testimonials__nav-button {
+  background: {{ section.settings.nav_button_background_color }};
+  color: {{ section.settings.nav_button_color }};
+  border: 1px solid {{ section.settings.nav_button_border_color }};
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.homepage-testimonials__nav-button:hover {
+  background-color: {{ section.settings.nav_button_hover_background_color }};
+  color: {{ section.settings.nav_button_hover_color }};
+}
+
+.homepage-testimonials__nav-button svg {
+  width: 16px;
+  height: 16px;
+}
+{%- endstyle -%}
+
+<div class="homepage-testimonials color-{{ section.settings.color_scheme }}" id="homepage-testimonials-{{ section.id }}">
+  <div class="homepage-testimonials__inner">
+    {% if section.settings.title != blank or section.settings.subtitle != blank %}
+      <div class="homepage-testimonials__header">
+        {% if section.settings.title != blank %}
+          <h2 class="homepage-testimonials__title">{{ section.settings.title }}</h2>
+        {% endif %}
+        
+        {% if section.settings.subtitle != blank %}
+          <div class="homepage-testimonials__subtitle rte">{{ section.settings.subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="homepage-testimonials__slider-wrapper">
+      <div class="homepage-testimonials__slider" id="Slider-{{ section.id }}" data-autoplay="{{ section.settings.enable_autoplay }}" data-autoplay-speed="{{ section.settings.autoplay_speed }}">
+        {% for block in section.blocks %}
+          <div class="homepage-testimonials__slide" {{ block.shopify_attributes }}>
+            <div class="homepage-testimonials__card">
+              <div class="homepage-testimonials__card-content">
+                <div class="homepage-testimonials__quote">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.192 10.843c0-4.483-3.112-8.106-6.956-8.106-0.142 0-0.283 0.005-0.423 0.014 2.692 0.933 4.61 3.341 4.61 6.175 0 1.001-0.348 1.869-0.926 2.605-1.283 1.631-2.325 2.955-2.325 4.193 0 1.456 1.15 2.636 2.573 2.636 1.422 0 2.573-1.18 2.573-2.636 0-1.238-1.042-2.562-2.325-4.193-0.578-0.736-0.926-1.603-0.926-2.605 0-1.208 0.577-2.316 1.522-3.019 0.19-0.138 0.391-0.259 0.603-0.362 0.907-0.421 1.927-0.656 3 0 0 0.666 0 1.333 0 2h-1c0 1.105 0.895 2 2 2s2-0.895 2-2v-0.5c0-1.381-1.119-2.5-2.5-2.5-0.656 0-1.25 0.251-1.695 0.663 0.227-2.277 2.137-4.163 4.46-4.163 0.035 0 0.069 0 0.104 0.001-0.034-0.001-0.069-0.001-0.104-0.001-2.475 0-4.48 2.005-4.48 4.48v1.52h-0.5c-1.381 0-2.5 1.119-2.5 2.5v0.5c0 1.105 0.895 2 2 2s2-0.895 2-2h-1c0-0.667 0-1.333 0-2z" fill="currentColor"/>
+                  </svg>
+                </div>
+                
+                {% if block.settings.rating > 0 %}
+                  <div class="homepage-testimonials__rating">
+                    {% for i in (1..5) %}
+                      <svg class="homepage-testimonials__star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="{% if i <= block.settings.rating %}currentColor{% else %}none{% endif %}" stroke="{% if i <= block.settings.rating %}none{% else %}currentColor{% endif %}" stroke-width="1"/>
+                      </svg>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                
+                <div class="homepage-testimonials__review rte">
+                  {{ block.settings.review }}
+                </div>
+                
+                <div class="homepage-testimonials__footer">
+                  {% if block.settings.avatar != blank %}
+                    <img 
+                      src="{{ block.settings.avatar | img_url: '96x' }}"
+                      alt="{{ block.settings.customer_name }}"
+                      loading="lazy"
+                      class="homepage-testimonials__avatar"
+                    >
+                  {% endif %}
+                  
+                  <div class="homepage-testimonials__customer-info">
+                    {% if block.settings.customer_name != blank %}
+                      <h3 class="homepage-testimonials__customer-name">{{ block.settings.customer_name }}</h3>
+                    {% endif %}
+                    
+                    {% if block.settings.customer_title != blank %}
+                      <div class="homepage-testimonials__customer-title">{{ block.settings.customer_title }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      
+      {% if section.blocks.size > 1 %}
+        <div class="homepage-testimonials__navigation">
+          <button class="homepage-testimonials__nav-button homepage-testimonials__prev" aria-label="Previous testimonial">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          
+          <div class="homepage-testimonials__pagination">
+            {% for i in (1..section.blocks.size) %}
+              <button class="homepage-testimonials__pagination-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to testimonial {{ forloop.index }}"></button>
+            {% endfor %}
+          </div>
+          
+          <button class="homepage-testimonials__nav-button homepage-testimonials__next" aria-label="Next testimonial">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sliderContainer = document.getElementById('Slider-{{ section.id }}');
+    if (!sliderContainer) return;
+    
+    const slides = sliderContainer.querySelectorAll('.homepage-testimonials__slide');
+    if (slides.length <= 1) return;
+    
+    const prevButton = document.querySelector('#homepage-testimonials-{{ section.id }} .homepage-testimonials__prev');
+    const nextButton = document.querySelector('#homepage-testimonials-{{ section.id }} .homepage-testimonials__next');
+    const paginationDots = document.querySelectorAll('#homepage-testimonials-{{ section.id }} .homepage-testimonials__pagination-dot');
+    
+    let currentIndex = 0;
+    const slideWidth = slides[0].offsetWidth;
+    let autoplayInterval;
+    
+    function goToSlide(index) {
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+      
+      currentIndex = index;
+      const offset = slides[index].offsetLeft - sliderContainer.offsetLeft;
+      sliderContainer.scrollTo({
+        left: offset,
+        behavior: 'smooth'
+      });
+      
+      // Update active pagination dot
+      paginationDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+    
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        goToSlide(currentIndex - 1);
+        stopAutoplay();
+      });
+    }
+    
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        goToSlide(currentIndex + 1);
+        stopAutoplay();
+      });
+    }
+    
+    // Set up pagination dots
+    paginationDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        stopAutoplay();
+      });
+    });
+    
+    // Handle scrolling manually (for swipe on mobile)
+    sliderContainer.addEventListener('scroll', () => {
+      const closestSlideIndex = Math.round(sliderContainer.scrollLeft / slideWidth);
+      if (closestSlideIndex !== currentIndex) {
+        currentIndex = closestSlideIndex;
+        
+        // Update active pagination dot
+        paginationDots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentIndex);
+        });
+      }
+    });
+    
+    // Set up autoplay if enabled
+    function startAutoplay() {
+      const autoplay = sliderContainer.dataset.autoplay === 'true';
+      const autoplaySpeed = parseInt(sliderContainer.dataset.autoplaySpeed, 10) || 5000;
+      
+      if (autoplay) {
+        autoplayInterval = setInterval(() => {
+          goToSlide(currentIndex + 1);
+        }, autoplaySpeed);
+      }
+    }
+    
+    function stopAutoplay() {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+      }
+    }
+    
+    // Start autoplay
+    startAutoplay();
+    
+    // Stop autoplay on hover
+    sliderContainer.addEventListener('mouseenter', stopAutoplay);
+    sliderContainer.addEventListener('mouseleave', startAutoplay);
+    
+    // Recalculate slider dimensions on window resize
+    window.addEventListener('resize', () => {
+      setTimeout(() => {
+        goToSlide(currentIndex);
+      }, 100);
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Customer Reviews"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>See what our customers have to say about their experience with our products.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_shadow",
+      "label": "Enable card shadow",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_hover",
+      "label": "Enable card hover effect",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Review text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote icon color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star rating color",
+      "default": "#ffc107"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "customer_name_color",
+      "label": "Customer name color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "customer_title_color",
+      "label": "Customer title color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Slider Controls"
+    },
+    {
+      "type": "color",
+      "id": "pagination_color",
+      "label": "Pagination dot color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_background_color",
+      "label": "Navigation button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_color",
+      "label": "Navigation button color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_border_color",
+      "label": "Navigation button border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_background_color",
+      "label": "Navigation button hover background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_color",
+      "label": "Navigation button hover color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay speed",
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view_desktop",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 3,
+      "label": "Slides per view (desktop)"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "label": "Slides per view (tablet)"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Rating (0-5)"
+        },
+        {
+          "type": "richtext",
+          "id": "review",
+          "label": "Review text",
+          "default": "<p>\"I absolutely love this product! It exceeded all my expectations and has become an essential part of my daily routine. The quality is outstanding and the customer service was excellent.\"</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Customer avatar"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "John Smith"
+        },
+        {
+          "type": "text",
+          "id": "customer_title",
+          "label": "Customer title/location",
+          "default": "Verified Buyer, Mumbai"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>\"My daughter absolutely loves her new toy! It's beautifully made, educational, and has kept her engaged for hours. Worth every penny.\"</p>",
+            "customer_name": "Priya Sharma",
+            "customer_title": "Verified Buyer, Mumbai"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>\"The quality of this product is exceptional. It's clear that a lot of thought went into the design, and my son hasn't put it down since it arrived!\"</p>",
+            "customer_name": "Rahul Patel",
+            "customer_title": "Verified Buyer, Delhi"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>\"Fast shipping, beautiful packaging, and a toy that encourages creativity instead of screen time. Exactly what I was looking for.\"</p>",
+            "customer_name": "Aanya Gupta",
+            "customer_title": "Verified Buyer, Bangalore"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
