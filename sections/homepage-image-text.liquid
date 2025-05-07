@@ -1,0 +1,575 @@
+{% comment %}
+  Homepage Image with Text Section
+  - Displays an image alongside text content in a flexible layout
+  - Supports left/right image alignment
+  - Fully responsive for mobile, tablet, and desktop
+{% endcomment %}
+
+{{ 'component-rte.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+.homepage-image-text {
+  background-color: {{ section.settings.background_color }};
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+}
+
+.homepage-image-text__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .homepage-image-text__inner {
+    flex-direction: {% if section.settings.desktop_image_position == 'left' %}row{% else %}row-reverse{% endif %};
+    align-items: center;
+  }
+}
+
+.homepage-image-text__media {
+  flex: 1;
+  position: relative;
+}
+
+.homepage-image-text__image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: {{ section.settings.image_border_radius }}px;
+  box-shadow: {% if section.settings.enable_image_shadow %}0 8px 30px rgba(0, 0, 0, 0.12){% else %}none{% endif %};
+  padding-bottom: {{ section.settings.image_ratio }}%;
+}
+
+.homepage-image-text__image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+{% if section.settings.enable_image_zoom %}
+.homepage-image-text__image-wrapper:hover .homepage-image-text__image {
+  transform: scale(1.05);
+}
+{% endif %}
+
+.homepage-image-text__content {
+  flex: 1;
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .homepage-image-text__content {
+    text-align: left;
+    padding: 0 2rem;
+  }
+}
+
+.homepage-image-text__tag {
+  display: inline-block;
+  background-color: {{ section.settings.tag_background_color }};
+  color: {{ section.settings.tag_text_color }};
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+}
+
+.homepage-image-text__title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: {{ section.settings.title_color }};
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2rem);
+  line-height: 1.2;
+}
+
+@media screen and (min-width: 750px) {
+  .homepage-image-text__title {
+    font-size: calc(var(--font-heading-scale) * 2.5rem);
+  }
+}
+
+.homepage-image-text__subtitle {
+  color: {{ section.settings.subtitle_color }};
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.homepage-image-text__description {
+  color: {{ section.settings.text_color }};
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.homepage-image-text__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media screen and (min-width: 750px) {
+  .homepage-image-text__buttons {
+    justify-content: flex-start;
+  }
+}
+
+.homepage-image-text__button {
+  min-width: 130px;
+}
+
+.homepage-image-text__button--primary {
+  background-color: {{ section.settings.button_background_color }};
+  color: {{ section.settings.button_text_color }};
+  border: 1px solid {{ section.settings.button_background_color }};
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.homepage-image-text__button--primary:hover {
+  background-color: {{ section.settings.button_background_hover_color }};
+  color: {{ section.settings.button_text_hover_color }};
+}
+
+.homepage-image-text__button--secondary {
+  background-color: transparent;
+  color: {{ section.settings.secondary_button_text_color }};
+  border: 1px solid {{ section.settings.secondary_button_border_color }};
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.homepage-image-text__button--secondary:hover {
+  background-color: {{ section.settings.secondary_button_background_hover_color }};
+  color: {{ section.settings.secondary_button_text_hover_color }};
+  border-color: {{ section.settings.secondary_button_border_hover_color }};
+}
+
+.homepage-image-text__features {
+  margin-top: 2rem;
+}
+
+.homepage-image-text__feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.homepage-image-text__feature-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: {{ section.settings.feature_icon_color }};
+}
+
+.homepage-image-text__feature-text {
+  color: {{ section.settings.feature_text_color }};
+  font-size: 0.95rem;
+}
+{%- endstyle -%}
+
+<div class="homepage-image-text color-{{ section.settings.color_scheme }}">
+  <div class="homepage-image-text__inner">
+    <div class="homepage-image-text__media">
+      <div class="homepage-image-text__image-wrapper">
+        {% if section.settings.image != blank %}
+          <img 
+            srcset="{%- if section.settings.image.width >= 165 -%}{{ section.settings.image | img_url: width: 165 }} 165w,{%- endif -%}
+              {%- if section.settings.image.width >= 360 -%}{{ section.settings.image | img_url: width: 360 }} 360w,{%- endif -%}
+              {%- if section.settings.image.width >= 535 -%}{{ section.settings.image | img_url: width: 535 }} 535w,{%- endif -%}
+              {%- if section.settings.image.width >= 750 -%}{{ section.settings.image | img_url: width: 750 }} 750w,{%- endif -%}
+              {%- if section.settings.image.width >= 1070 -%}{{ section.settings.image | img_url: width: 1070 }} 1070w,{%- endif -%}
+              {%- if section.settings.image.width >= 1500 -%}{{ section.settings.image | img_url: width: 1500 }} 1500w,{%- endif -%}"
+            src="{{ section.settings.image | img_url: width: 750 }}"
+            sizes="(min-width: 750px) 50vw, 100vw"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            class="homepage-image-text__image"
+          >
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'homepage-image-text__image placeholder' }}
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="homepage-image-text__content">
+      {% if section.settings.show_tag and section.settings.tag_text != blank %}
+        <div class="homepage-image-text__tag">{{ section.settings.tag_text }}</div>
+      {% endif %}
+      
+      {% if section.settings.title != blank %}
+        <h2 class="homepage-image-text__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.subtitle != blank %}
+        <div class="homepage-image-text__subtitle">{{ section.settings.subtitle }}</div>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <div class="homepage-image-text__description rte">{{ section.settings.description }}</div>
+      {% endif %}
+      
+      {% if section.blocks.size > 0 %}
+        <div class="homepage-image-text__features">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <div class="homepage-image-text__feature" {{ block.shopify_attributes }}>
+                <div class="homepage-image-text__feature-icon">
+                  <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17l-4.17-4.17-1.42 1.41 5.59 5.59 12-12-1.41-1.41z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="homepage-image-text__feature-text">{{ block.settings.text }}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      <div class="homepage-image-text__buttons">
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="homepage-image-text__button homepage-image-text__button--primary">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+        
+        {% if section.settings.secondary_button_text != blank %}
+          <a href="{{ section.settings.secondary_button_link }}" class="homepage-image-text__button homepage-image-text__button--secondary">
+            {{ section.settings.secondary_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with Text",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Designed for Kids, Loved by Parents"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The perfect blend of fun and learning"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Our toys are thoughtfully designed to spark imagination, encourage development, and bring families together. Made with premium materials that are safe for your child and built to last for years of play.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag",
+      "label": "Show tag",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Tag text",
+      "default": "Our Philosophy"
+    },
+    {
+      "type": "color",
+      "id": "tag_background_color",
+      "label": "Tag background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "tag_text_color",
+      "label": "Tag text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Feature Points"
+    },
+    {
+      "type": "color",
+      "id": "feature_icon_color",
+      "label": "Feature icon color",
+      "default": "#ac182c"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature text color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Desktop image position"
+    },
+    {
+      "type": "range",
+      "id": "image_ratio",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Image aspect ratio",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_shadow",
+      "label": "Enable image shadow",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_zoom",
+      "label": "Enable image zoom on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Primary button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Primary button background",
+      "default": "#ac182c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Primary button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background_hover_color",
+      "label": "Primary button hover background",
+      "default": "#8e1324"
+    },
+    {
+      "type": "color",
+      "id": "button_text_hover_color",
+      "label": "Primary button hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text_color",
+      "label": "Secondary button text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border_color",
+      "label": "Secondary button border",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_background_hover_color",
+      "label": "Secondary button hover background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text_hover_color",
+      "label": "Secondary button hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_border_hover_color",
+      "label": "Secondary button hover border",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Feature text",
+          "default": "Non-toxic materials safe for all ages"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with Text",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Premium quality materials"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Develops motor skills and creativity"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Designed for durability and safety"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
