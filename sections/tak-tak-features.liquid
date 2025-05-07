@@ -1,0 +1,202 @@
+{% comment %} Tak Tak Toys Features Section {% endcomment %}
+<div class="tak-tak-features page-width">
+  <h2 class="tak-tak-features__title">{{ section.settings.title }}</h2>
+  
+  <div class="tak-tak-features__intro">
+    <p>{{ section.settings.intro_text }}</p>
+  </div>
+  
+  <div class="tak-tak-features__grid">
+    {% for block in section.blocks %}
+      <div class="tak-tak-features__item" {{ block.shopify_attributes }}>
+        <div class="tak-tak-features__icon-container">
+          {% if block.settings.icon != blank %}
+            <img src="{{ block.settings.icon | img_url: '100x' }}" alt="{{ block.settings.title }}" class="tak-tak-features__icon">
+          {% endif %}
+        </div>
+        <h3 class="tak-tak-features__item-title">{{ block.settings.title }}</h3>
+        <div class="tak-tak-features__item-text">{{ block.settings.text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .tak-tak-features {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .tak-tak-features__title {
+    font-size: 2.5rem;
+    color: #283583;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  .tak-tak-features__intro {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .tak-tak-features__grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .tak-tak-features__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .tak-tak-features__icon-container {
+    background-color: #f0e6ff;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .tak-tak-features__icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+  
+  .tak-tak-features__item-title {
+    font-size: 1.2rem;
+    color: #283583;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  .tak-tak-features__item-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  @media screen and (min-width: 750px) {
+    .tak-tak-features__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (min-width: 990px) {
+    .tak-tak-features__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .tak-tak-features__title {
+      font-size: 3rem;
+    }
+    
+    .tak-tak-features__item-title {
+      font-size: 1.4rem;
+    }
+    
+    .tak-tak-features__item-text {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Tak Tak Features",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "5 WAYS TAK TAK TOYS STANDS OUT",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "default": "From thoughtful design to meaningful play, Tak Tak Toys brings more than just fun to the table. Here are five ways we go beyond the ordinary to create toys that inspire, educate, and delight every single day.",
+      "label": "Intro Text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Feature Title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "default": "Feature description goes here.",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tak Tak Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "IMAGINATION FIRST",
+            "text": "Our toys are intentionally designed to spark creativity and open-ended play—encouraging storytelling, exploration, and problem-solving in every session."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "SCREEN-LIGHT PLAY PHILOSOPHY",
+            "text": "In a world dominated by digital distractions, we're passionate about bringing children back to hands-on, imaginative experiences that build real-world connections."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "KOALA COMPANION FOR GUIDED PLAY",
+            "text": "Unique to our brand, our friendly Koala mascot leads kids through themed adventures, fostering engagement and emotional bonding."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "UNCOMPROMISING QUALITY & SAFETY",
+            "text": "All toys are BIS-approved, non-toxic, and undergo rigorous checks—offering parents peace of mind with every purchase."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "BUILT WITH PURPOSE, PRICED WITH CARE",
+            "text": "We believe in accessible excellence. Our toys deliver premium value without premium prices—making meaningful playtime an everyday reality for families."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
