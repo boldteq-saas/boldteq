@@ -127,11 +127,49 @@
         "title": "5 WAYS TAK TAK TOYS STANDS OUT",
         "intro_text": "From thoughtful design to meaningful play, Tak Tak Toys brings more than just fun to the table. Here are five ways we go beyond the ordinary to create toys that inspire, educate, and delight every single day."
       }
+    },
+    "advanced_announcement_bar_EVPpDA": {
+      "type": "advanced-announcement-bar",
+      "blocks": {
+        "announcement_D77xqB": {
+          "type": "announcement",
+          "settings": {
+            "text": "Free shipping on orders over $50",
+            "link": "#",
+            "link_text": "Shop now"
+          }
+        },
+        "announcement_XcwREX": {
+          "type": "announcement",
+          "settings": {
+            "text": "50% off selected items",
+            "link": "#",
+            "link_text": "View sale"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_D77xqB",
+        "announcement_XcwREX"
+      ],
+      "name": "Advanced Announcement Bar",
+      "settings": {
+        "background_color": "#f8f9fa",
+        "text_color": "#212529",
+        "link_color": "#007bff",
+        "link_hover_color": "#0056b3",
+        "icon_background_color": "#ffffff",
+        "control_color": "#6c757d",
+        "control_hover_color": "#212529",
+        "autoplay": true,
+        "autoplay_speed": 5000
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "tak_tak_features_LYUP4y"
+    "tak_tak_features_LYUP4y",
+    "advanced_announcement_bar_EVPpDA"
   ]
 }
